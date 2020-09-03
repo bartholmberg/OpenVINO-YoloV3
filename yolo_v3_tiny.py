@@ -5,8 +5,8 @@ import tensorflow as tf
 from yolo_v3 import _conv2d_fixed_padding, _fixed_padding, _get_size, \
     _detection_layer, _upsample
 
-slim = tf.contrib.slim
-
+#slim = tf.contrib.slim
+slim = tf.nn
 _BATCH_NORM_DECAY = 0.9
 _BATCH_NORM_EPSILON = 1e-05
 _LEAKY_RELU = 0.1

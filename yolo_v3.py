@@ -2,9 +2,9 @@
 
 import numpy as np
 import tensorflow as tf
-
-slim = tf.contrib.slim
-
+#from demo import FLAGS
+#slim = tf.contrib.slim
+slim = tf.nn
 _BATCH_NORM_DECAY = 0.9
 _BATCH_NORM_EPSILON = 1e-05
 _LEAKY_RELU = 0.1
@@ -47,10 +47,10 @@ def darknet53(inputs):
 
 
 def _conv2d_fixed_padding(inputs, filters, kernel_size, strides=1):
+    print( "strides:" ,strides)
     if strides > 1:
         inputs = _fixed_padding(inputs, kernel_size)
-    inputs = slim.conv2d(inputs, filters, kernel_size, stride=strides,
-                         padding=('SAME' if strides == 1 else 'VALID'))
+    inputs = tf.compat.v1.layers.conv2d(inputs, filters, kernel_size, strides=strides,padding=('SAME' if strides == 1 else 'VALID'))
     return inputs
 
 
@@ -63,7 +63,8 @@ def _darknet53_block(inputs, filters):
     return inputs
 
 
-@tf.contrib.framework.add_arg_scope
+#@tf.contrib.framework.add_arg_scope
+#@tf.nn.add_arg_scope
 def _fixed_padding(inputs, kernel_size, *args, mode='CONSTANT', **kwargs):
     """
     Pads the input along the spatial dimensions independently of input size.
@@ -83,8 +84,9 @@ def _fixed_padding(inputs, kernel_size, *args, mode='CONSTANT', **kwargs):
     pad_total = kernel_size - 1
     pad_beg = pad_total // 2
     pad_end = pad_total - pad_beg
-
-    if kwargs['data_format'] == 'NCHW':
+    import config as gf
+    print( gf.FLAGS.data_format)
+    if gf.FLAGS.data_format == 'NCHW':
         padded_inputs = tf.pad(inputs, [[0, 0], [0, 0],
                                         [pad_beg, pad_end],
                                         [pad_beg, pad_end]],
@@ -219,15 +221,15 @@ def yolo_v3(inputs, num_classes, is_training=False, data_format='NCHW', reuse=Fa
     }
 
     # Set activation_fn and parameters for conv2d, batch_norm.
-    with slim.arg_scope([slim.conv2d, slim.batch_norm, _fixed_padding], data_format=data_format, reuse=reuse):
-        with slim.arg_scope([slim.conv2d], normalizer_fn=slim.batch_norm,
-                            normalizer_params=batch_norm_params,
-                            biases_initializer=None,
-                            activation_fn=lambda x: tf.nn.leaky_relu(x, alpha=_LEAKY_RELU)):
-            with tf.variable_scope('darknet-53'):
-                route_1, route_2, inputs = darknet53(inputs)
+    #with slim.arg_scope([slim.conv2d, slim.batch_norm, _fixed_padding], data_format=data_format, reuse=reuse):
+    #    with slim.arg_scope([slim.conv2d], normalizer_fn=slim.batch_norm,
+    #                        normalizer_params=batch_norm_params,
+    #                        biases_initializer=None,
+    #                        activation_fn=lambda x: tf.nn.leaky_relu(x, alpha=_LEAKY_RELU)):
+    with tf.compat.v1.variable_scope('darknet-53'):
+         route_1, route_2, inputs = darknet53(inputs)
 
-            with tf.variable_scope('yolo-v3'):
+         with tf.compat.v1.variable_scope('yolo-v3'):
                 route, inputs = _yolo_block(inputs, 512)
                 detect_1 = _detection_layer(inputs, num_classes, _ANCHORS[6:9], img_size, data_format)
                 detect_1 = tf.identity(detect_1, name='detect_1')

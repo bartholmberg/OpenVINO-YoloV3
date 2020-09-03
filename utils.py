@@ -16,9 +16,9 @@ def get_boxes_and_inputs_pb(frozen_graph):
 
 def get_boxes_and_inputs(model, num_classes, size, data_format):
 
-    inputs = tf.placeholder(tf.float32, [1, size, size, 3])
+    inputs = tf.compat.v1.placeholder(tf.float32, [1, size, size, 3])
 
-    with tf.variable_scope('detector'):
+    with tf.compat.v1.variable_scope('detector'):
         detections = model(inputs, num_classes,
                            data_format=data_format)
 
