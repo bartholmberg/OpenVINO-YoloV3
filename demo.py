@@ -67,9 +67,9 @@ def main(argv=None):
 
         boxes, inputs = get_boxes_and_inputs(model, len(classes), gf.FLAGS.size, gf.FLAGS.data_format)
 
-        saver = tf.train.Saver(var_list=tf.global_variables(scope='detector'))
+        saver = tf.compat.v1.train.Saver(var_list=tf.compat.v1.global_variables(scope='detector'))
 
-        with tf.Session(config=config) as sess:
+        with tf.compat.v1.Session(config=config) as sess:
             t0 = time.time()
             saver.restore(sess, gf.FLAGS.ckpt_file)
             print('Model restored in {:.2f}s'.format(time.time()-t0))

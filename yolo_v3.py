@@ -116,10 +116,12 @@ def _get_size(shape, data_format):
 
 def _detection_layer(inputs, num_classes, anchors, img_size, data_format):
     num_anchors = len(anchors)
-    predictions = slim.conv2d(inputs, num_anchors * (5 + num_classes), 1,
-                              stride=1, normalizer_fn=None,
-                              activation_fn=None,
-                              biases_initializer=tf.zeros_initializer())
+    strides =1
+    predictions= tf.compat.v1.layers.conv2d(inputs, num_anchors * (5 + num_classes), 1, strides=strides,padding=('SAME' if strides == 1 else 'VALID'))
+    #predictions =  slim.conv2d(inputs, num_anchors * (5 + num_classes), 1,
+    #                          strides=1, normalizer_fn=None,
+    #                          activation_fn=None,
+    #                          biases_initializer=tf.zeros_initializer())
 
     shape = predictions.get_shape().as_list()
     grid_size = _get_size(shape, data_format)
@@ -179,7 +181,7 @@ def _upsample(inputs, out_shape, data_format='NCHW'):
         new_height = out_shape[2]
         new_width = out_shape[1]
 
-    inputs = tf.image.resize_nearest_neighbor(inputs, (new_height, new_width))
+    inputs = tf.compat.v1.image.resize_nearest_neighbor(inputs, (new_height, new_width))
 
     # back to NCHW if needed
     if data_format == 'NCHW':
