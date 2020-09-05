@@ -55,7 +55,7 @@ def main(argv=None):
 
         boxes, inputs = get_boxes_and_inputs_pb(frozenGraph)
 
-        with tf.Session(graph=frozenGraph, config=config) as sess:
+        with tf.compat.v1.Session(graph=frozenGraph, config=config) as sess:
             t0 = time.time()
             detected_boxes = sess.run(boxes, feed_dict={inputs: [img_resized]})
 
