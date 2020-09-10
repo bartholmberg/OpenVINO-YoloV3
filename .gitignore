@@ -1,6 +1,8 @@
 *.weights
 _*
 *.pb
+yolo-v3.bin
+yolo-v3.xml
 frozen_yolo_v3.bin
 frozen_yolo_v3.mapping
 frozen_yolo_v3.xml
