@@ -7,7 +7,7 @@ import yolo_v3_tiny
 
 from utils import load_coco_names, load_weights
 
-FLAGS = tf.app.flags.FLAGS
+FLAGS = tf.comp.v1.app.flags.FLAGS
 
 tf.app.flags.DEFINE_string(
     'class_names', 'coco.names', 'File with class names')

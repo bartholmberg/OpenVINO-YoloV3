@@ -1,14 +1,13 @@
 *.weights
 _*
 *.pb
-yolo-v3.bin
-yolo-v3.xml
+yolo-v3_INTEL.bin
+yolo-v3_INTEL.xml
 frozen_yolo_v3.bin
-frozen_yolo_v3.mapping
+*.mapping
 frozen_yolo_v3.xml
 frozen_yolo_v3.labels
 frozen_tiny_yolo_v3.bin
-frozen_tiny_yolo_v3.mapping
 frozen_tiny_yolo_v3.xml
 frozen_tiny_yolo_v3.labels
 *.tar.gz
